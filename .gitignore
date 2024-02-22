@@ -1,0 +1,11 @@
+/backend/node_modules
+/client/node_modules
+
+/client/client/node_modules
+/client/admin/node_modules
+
+/backend/.env
+
+/client/client/.env
+/client/admin/.env
+/client/.env

@@ -1,7 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const http = require("http");
-const { Server } = require("socket.io");
 const cookieParser = require("cookie-parser");
 const createHttpError = require("http-errors");
 const { errorResponse } = require("./controllers/response/response.controller");
@@ -9,6 +7,9 @@ const customerSupportRouter = require("./routes/customer-support.route");
 const userRouter = require("./routes/user.route");
 const conversationRouter = require("./routes/conversation.route");
 const messageRouter = require("./routes/message.route");
+
+const http = require("http");
+const { Server } = require("socket.io");
 
 /* 
     making express app
@@ -27,6 +28,13 @@ const io = new Server(server, {
 let activeCustomerSupport = [];
 
 io.on("connection", (socket) => {
+  /**  need to call when customer support is login
+   * -> must needed
+   * user={
+   *     id
+   * }
+   */
+
   socket.on("add-customer-support", (user) => {
     socket.join(user.id);
     // if active customer support is not added previously
@@ -40,6 +48,26 @@ io.on("connection", (socket) => {
     }
   });
 
+  /** need to when new conversation is created in the client side 
+   * -> relay the new created conversation
+   * ->must needed 
+   *  conversation={
+     participantId: {
+       _id
+     }
+   } 
+  */
+
+  socket.on("new-conversation", (data) => {
+    if (data.participantId._id) {
+      io.to(data.participantId._id).emit("get-new-conversation", data);
+    }
+  });
+
+  /**
+   * when customer support disconnect
+   *
+   */
   socket.on("disconnect", () => {
     // remove the customer support from active users
     activeCustomerSupport = activeCustomerSupport.filter(
@@ -47,10 +75,23 @@ io.on("connection", (socket) => {
     );
   });
 
+  /* client part */
+  /* need to call when user is register/login
+   * -> must needed user id 
+   * -> data={
+     id
+   }
+  */
   socket.on("add-user", (data) => {
     socket.join(data.id);
   });
 
+  /* check active customer support id
+   * -> must needed user id
+   * -> data={
+     id
+   }
+  */
   socket.on("check-active-customer-support", (data) => {
     let randomId;
     if (activeCustomerSupport.length > 0) {
@@ -72,9 +113,17 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("sendMessage", (data) => {
-    io.to(data.id).emit("getMessage", data);
+  /* message transfer */
+  socket.on("send-message", (data) => {
+    if (data.receiverId) {
+      io.to(data.receiverId).emit("get-message", {
+        ...data,
+        updatedAt: new Date(),
+      });
+    }
   });
+
+  /* client part end */
 });
 
 /* 
@@ -113,7 +162,4 @@ app.use((err, req, res, next) => {
   return errorResponse(res, { statusCode: err.status, message: err.message });
 });
 
-/* 
-  exporting express app
-  */
 module.exports = server;

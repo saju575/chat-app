@@ -9,11 +9,11 @@ const messageSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       refPath: "senderType",
     },
-    reciverType: {
+    receiverType: {
       type: String,
       enum: ["User", "CustomerSupport"],
     },
-    reciverId: {
+    receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       refPath: "reciverType",
     },
@@ -27,6 +27,7 @@ const messageSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

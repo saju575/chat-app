@@ -38,6 +38,7 @@ const customerSupportSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

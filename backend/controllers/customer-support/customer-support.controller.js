@@ -110,7 +110,7 @@ exports.login = async (req, res, next) => {
     res.cookie(COOKIES_NAME_1, accessToken, {
       maxAge: 60 * 60 * 24 * 120 * 1000,
       httpOnly: true,
-      sameSite: "None",
+      // sameSite: "None",
       // secure: true,
       path: "/",
     });
@@ -131,7 +131,7 @@ exports.login = async (req, res, next) => {
 exports.logout = async (req, res, next) => {
   try {
     res.clearCookie(COOKIES_NAME_1, {
-      sameSite: "None",
+      // sameSite: "None",
       // secure: true,
       path: "/",
     });

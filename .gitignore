@@ -9,3 +9,9 @@
 /client/client/.env
 /client/admin/.env
 /client/.env
+
+/backend/.env.local
+
+/client/client/.env.local
+/client/admin/.env.local
+/client/.env.local

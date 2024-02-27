@@ -8,6 +8,7 @@ import Home from "../pages/home";
 import Inbox from "../pages/inbox";
 import Login from "../pages/login";
 
+import ChatLayout from "../components/inbox/chat-layout";
 import CustomerSupport from "../pages/customer-support";
 import CheckAdmin from "./check-admin";
 import CheckCustomerSupport from "./check-customer-support";
@@ -50,7 +51,12 @@ export const router = createBrowserRouter(
               <Inbox />
             </CheckCustomerSupport>
           }
-        />
+        >
+          <Route
+            path="/customer-support/chat/:conversationId/:userId"
+            element={<ChatLayout />}
+          />
+        </Route>
       </Route>
     </>
   )

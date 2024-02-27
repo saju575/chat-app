@@ -18,7 +18,7 @@ const Logout = () => {
   });
   return (
     <span
-      className={`flex items-center cursor-pointer border bg-slate-400 px-1 py-1 rounded-2xl ${
+      className={`flex items-center cursor-pointer border bg-slate-400 text-white px-1 py-1 rounded-2xl ${
         isLoading && "cursor-not-allowed"
       }`}
       onClick={async () => await logout()}

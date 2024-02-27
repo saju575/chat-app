@@ -56,3 +56,24 @@ exports.updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getUserById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw createHttpError(400, "Invalid ID");
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      throw createHttpError(404, "User not found");
+    }
+
+    return successResponse(res, {
+      payload: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -1,14 +1,57 @@
-const MessageSendForm = () => {
+/* eslint-disable react/prop-types */
+import { useContext, useState } from "react";
+import { AuthContext } from "../../providers/auth.provider";
+import { SocketContext } from "../../providers/socket.provider";
+import { sendPostRequest } from "../../utils/server-request-function/send-post-request";
+
+const MessageSendForm = ({ conversationId, receiverId, setMessages }) => {
+  const [message, setMessage] = useState("");
+  const { state } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
+
+  const sendMessages = async (data, url) => {
+    try {
+      const res = await sendPostRequest(data, url);
+      return res.payload;
+    } catch (error) {
+      //
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (message === "") return;
+    console.log(message);
+
+    const messageData = {
+      conversationId,
+      senderId: state?.user?._id,
+      message: message,
+      receiverId,
+      receiverType: "User",
+      senderType: "CustomerSupport",
+    };
+    setMessages((prev) => [...prev, messageData]);
+    setMessage("");
+    const data = await sendMessages(messageData, "/message/create");
+    if (data) {
+      socket.current.emit("send-message", data);
+    }
+
+    console.log(messageData);
+  };
   return (
     <div className=" w-full p-3 border-t border-gray-300">
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="relative w-full  px-4 mx-3 bg-gray-100  rounded-full">
           <input
             type="text"
-            className="block py-2 outline-none focus:text-gray-700 bg-gray-100"
+            className="w-full block py-2 outline-none focus:text-gray-700 bg-gray-100"
             placeholder="Message"
             name="message"
             required
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
           <button
             type="submit"

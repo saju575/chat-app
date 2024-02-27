@@ -4,7 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import Spinner from "../components/spinner/spinner";
 import { AuthContext } from "../providers/auth.provider";
 
-const CheckAdmin = ({ children }) => {
+const CheckCustomerSupport = ({ children }) => {
   const { state } = useContext(AuthContext);
   const location = useLocation();
 
@@ -16,12 +16,16 @@ const CheckAdmin = ({ children }) => {
     );
   }
 
-  if (!state?.isLoading && state?.user && state?.user?.role === "admin") {
+  if (
+    !state?.isLoading &&
+    state?.user &&
+    state?.user?.role === "customerSupport"
+  ) {
     return children;
   }
-  if (!state?.isLoading && state?.user?.role !== "admin") {
+  if (!state?.isLoading && state?.user?.role !== "customerSupport") {
     return <Navigate to={"/"} state={{ from: location }} replace />;
   }
 };
 
-export default CheckAdmin;
+export default CheckCustomerSupport;

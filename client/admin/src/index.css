@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Webkit (Safari, Chrome, Opera) */
+::-webkit-scrollbar {
+  width: 3px; /* Set the width of the scrollbar */
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Set the color of the scrollbar thumb */
+}
+
+/* Firefox */
+/* Set the width and color of the scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5);
+}
